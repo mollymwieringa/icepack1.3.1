@@ -26,51 +26,7 @@
       public :: init_forcing, get_forcing, interp_coeff, &
                 interp_coeff_monthly, get_wave_spec
 
-      integer (kind=int_kind), parameter :: &
-         ntime = 8760        ! number of data points in time
-
-      integer (kind=int_kind), public :: &
-         ycycle          , & ! number of years in forcing cycle
-         fyear_init      , & ! first year of data in forcing cycle
-         fyear           , & ! current year in forcing cycle
-         fyear_final         ! last year in cycle
-
-      real (kind=dbl_kind), dimension(ntime) :: &
-            fsw_data, & ! field values at temporal data points
-           cldf_data, &
-          fsnow_data, &
-           Tair_data, &
-           uatm_data, &
-           vatm_data, &
-           wind_data, &
-          strax_data, &
-          stray_data, &
-           rhum_data, &
-             Qa_data, &
-           rhoa_data, &
-           potT_data, &
-            flw_data, &
-            qdp_data, &
-            sst_data, &
-            sss_data, & 
-           uocn_data, &
-           vocn_data, &
-          frain_data, &
-          swvdr_data, &
-          swvdf_data, &
-          swidr_data, &
-          swidf_data, &
-           zlvl_data, &
-           hmix_data
-
-      real (kind=dbl_kind), dimension(nx) :: &
-          sst_temp
-
-      real (kind=dbl_kind), dimension(ntime) :: &
-           open_data, &
-           clos_data
-
-      character(char_len), public :: & 
+      character(char_len), public :: &
          atm_data_format, & ! 'bin'=binary or 'nc'=netcdf
          ocn_data_format, & ! 'bin'=binary or 'nc'=netcdf
          bgc_data_format, & ! 'bin'=binary or 'nc'=netcdf
@@ -82,6 +38,63 @@
          ice_data_file,   & ! ice forcing data file
          bgc_data_file,   & ! biogeochemistry forcing data file
          precip_units       ! 'mm_per_month', 'mm_per_sec', 'mks'
+
+      integer (kind=int_kind), public :: &
+           ntime_atm, & ! number of data points in time
+           ntime_ocn
+      integer (kind=int_kind), public :: &
+         ycycle          , & ! number of years in forcing cycle
+         fyear_init      , & ! first year of data in forcing cycle
+         fyear           , & ! current year in forcing cycle
+         fyear_final         ! last year in cycle
+
+      real (kind=dbl_kind), allocatable :: &
+            fsw_data(:), & ! field values at temporal data points
+           cldf_data(:), &
+          fsnow_data(:), &
+           Tair_data(:), &
+           uatm_data(:), &
+           vatm_data(:), &
+           wind_data(:), &
+          strax_data(:), &
+          stray_data(:), &
+           rhum_data(:), &
+             Qa_data(:), &
+           rhoa_data(:), &
+           potT_data(:), &
+            flw_data(:), &
+            qdp_data(:), &
+            sst_data(:), &
+            sss_data(:), & 
+           uocn_data(:), &
+           vocn_data(:), &
+          frain_data(:), &
+          swvdr_data(:), &
+          swvdf_data(:), &
+          swidr_data(:), &
+          swidf_data(:), &
+           zlvl_data(:), &
+           hmix_data(:)
+
+      real (kind=dbl_kind), dimension(nx) :: &
+          sst_temp
+
+      real (kind=dbl_kind), allocatable :: &
+           open_data(:), &
+           clos_data(:)
+
+!      character(char_len), public :: & 
+!         atm_data_format, & ! 'bin'=binary or 'nc'=netcdf
+!         ocn_data_format, & ! 'bin'=binary or 'nc'=netcdf
+!         bgc_data_format, & ! 'bin'=binary or 'nc'=netcdf
+!         atm_data_type,   & ! 'default', 'clim', 'CFS'
+!         ocn_data_type,   & ! 'default', 'SHEBA'
+!         bgc_data_type,   & ! 'default', 'ISPOL', 'NICE'
+!         atm_data_file,   & ! atmospheric forcing data file
+!         ocn_data_file,   & ! ocean forcing data file
+!         ice_data_file,   & ! ice forcing data file
+!         bgc_data_file,   & ! biogeochemistry forcing data file
+!         precip_units       ! 'mm_per_month', 'mm_per_sec', 'mks'
  
       character(char_len_long), public :: & 
          data_dir           ! top directory for forcing data
@@ -125,7 +138,34 @@
     !-------------------------------------------------------------------
     ! Initialize forcing data to default values
     !-------------------------------------------------------------------
-
+      allocate(fsw_data(ntime_atm)) 
+      allocate(cldf_data(ntime_atm))   
+      allocate(fsnow_data(ntime_atm))
+      allocate(Tair_data(ntime_atm)) 
+      allocate(uatm_data(ntime_atm))
+      allocate(vatm_data(ntime_atm))
+      allocate(wind_data(ntime_atm))
+      allocate(strax_data(ntime_atm))
+      allocate(stray_data(ntime_atm))
+      allocate(rhum_data(ntime_atm))
+      allocate(Qa_data(ntime_atm))
+      allocate(rhoa_data(ntime_atm))
+      allocate(potT_data(ntime_atm))
+      allocate(flw_data(ntime_atm))
+      allocate(qdp_data(ntime_ocn))
+      allocate(sst_data(ntime_ocn))
+      allocate(sss_data(ntime_ocn))
+      allocate(uocn_data(ntime_ocn))
+      allocate(vocn_data(ntime_ocn))
+      allocate(frain_data(ntime_atm))
+      allocate(swvdr_data(ntime_atm))
+      allocate(swvdf_data(ntime_atm))
+      allocate(swidr_data(ntime_atm))
+      allocate(swidf_data(ntime_atm))
+      allocate(zlvl_data(ntime_atm))
+      allocate(hmix_data(ntime_ocn)) 
+      allocate(open_data(ntime_ocn))
+      allocate(clos_data(ntime_ocn))
       ! many default forcing values are set in init_flux_atm
       i = 1 ! use first grid box value
 
@@ -157,6 +197,7 @@
       if (trim(atm_data_type(1:4)) == 'clim')  call atm_climatological
       if (trim(atm_data_type(1:5)) == 'ISPOL') call atm_ISPOL
       if (trim(atm_data_type(1:4)) == 'NICE')  call atm_NICE
+      if (trim(atm_data_type(1:4)) == 'CAM6')  call atm_CAM6
       if (trim(ocn_data_type(1:5)) == 'SHEBA') call ice_open_clos
 
       if (restore_ocn) then
@@ -223,9 +264,10 @@
 
       character(len=*), parameter :: subname='(get_forcing)'
 
-      if (trim(atm_data_type) == 'CFS') then
+      if (trim(atm_data_type) == 'CFS' .or. trim(atm_data_type) == 'CAM6') then
          ! calculate data index corresponding to current timestep
-         i = mod(timestep-1,ntime)+1 ! repeat forcing cycle
+         print*,timestep,ntime_atm
+         i = mod(timestep-1,ntime_atm)+1 ! repeat forcing cycle
          mlast = i
          mnext = mlast
          c1intp = c1
@@ -397,7 +439,12 @@
             mnext = month
          endif
          call interp_coeff_monthly(recslot, c1intp, c2intp)
-
+         !print*,'-----------------'
+         !print*,mday,mlast,mnext
+         !print*,c1intp,c2intp
+         !print*,sst_data(mlast),sst_data(mnext)
+         !print*,c1intp *  sst_data(mlast) + c2intp *  sst_data(mnext)
+         !print*,'-----------------'
          sst_temp(:) = c1intp *  sst_data(mlast) + c2intp *  sst_data(mnext)
          sss     (:) = c1intp *  sss_data(mlast) + c2intp *  sss_data(mnext)
          uocn    (:) = c1intp * uocn_data(mlast) + c2intp * uocn_data(mnext)
@@ -424,7 +471,7 @@
       else
 
          ! use default values for all other data fields
-         i = mod(timestep-1,ntime)+1 ! repeat forcing cycle
+         i = mod(timestep-1,ntime_ocn)+1 ! repeat forcing cycle
          mlast = i
          mnext = mlast
          c1intp = c1
@@ -439,12 +486,12 @@
       endif
 
       call finish_ocn_forcing(sst_temp)
-
+      
       ! Lindsay SHEBA open/close dataset is hourly
       if (trim(ocn_data_type) == 'SHEBA') then
 
         sec1hr = secday/c24                      ! seconds in 1 hour
-        maxrec = ntime
+        maxrec = ntime_ocn
         recnum = 24*int(yday) - 23 + int(real(sec,kind=dbl_kind)/sec1hr)
         recslot = 2
         dataloc = 1                          ! data located at middle of interval
@@ -562,7 +609,7 @@
       read (nu_forcing, *) string1 ! headers
       read (nu_forcing, *) string1 ! units
 
-      do nt = 1, ntime
+      do nt = 1, ntime_atm
          read (nu_forcing, '(6(f10.5,1x),2(f10.8,1x))') &
          dswsfc, dlwsfc, windu10, windv10, temp2m, spechum, precip
 
@@ -579,7 +626,57 @@
       close (nu_forcing)
 
       end subroutine atm_CFS
+!=======================================================================
+     subroutine atm_CAM6
 
+      integer (kind=int_kind) :: &
+         nt             ! loop index
+
+      real (kind=dbl_kind) :: &
+         dlwsfc,  &     ! downwelling longwave (W/m2)
+         dswsfc,  &     ! downwelling shortwave (W/m2)
+         windu10, &     ! wind components (m/s)
+         windv10, &     !
+         temp2m,  &     ! 2m air temperature (K)
+         spechum ,&     ! specific humidity (kg/kg)
+         precipr ,&     ! Rain precipitation (kg/m2/s)
+         precips ,&     ! Snow precipitation (kg/m2/s)
+         z              ! Height (m)
+
+      character (char_len_long) string1
+      character (char_len_long) filename
+      character(len=*), parameter :: subname='(atm_CFS)'
+
+!      atm_data_file = 'cfsv2_2015_220_70_01hr.txt'
+      filename = trim(data_dir)//'/CAM6/'//trim(atm_data_file)
+
+      write (nu_diag,*) 'Reading ',filename
+
+      open (nu_forcing, file=filename, form='formatted')
+      read (nu_forcing, *) string1 ! headers
+      read (nu_forcing, *) string1 ! units
+
+      do nt = 1, ntime_atm
+         !write(nu_diag,*) nt
+         read (nu_forcing, '(6(f10.5,1x),3(f10.8,1x))') &
+         z, dswsfc, dlwsfc, windu10, windv10, temp2m, spechum, precipr,precips
+         !print*,nt,z, dswsfc, dlwsfc, windu10, windv10, temp2m, spechum, precipr,precips
+         
+           flw_data(nt) = dlwsfc
+           fsw_data(nt) = dswsfc
+          uatm_data(nt) = windu10
+          vatm_data(nt) = windv10
+          Tair_data(nt) = temp2m
+          potT_data(nt) = temp2m
+            Qa_data(nt) = spechum
+         fsnow_data(nt) = precips
+         frain_data(nt) = precipr
+         zlvl_data(nt) = z
+      enddo
+
+      close (nu_forcing)
+
+      end subroutine atm_CAM6
 !=======================================================================
 
       subroutine prepare_forcing (Tair,     fsw,      &
@@ -595,7 +692,7 @@
 
       ! this routine acts on the data fields prior to interpolation
 
-      real (kind=dbl_kind), dimension(ntime), &
+      real (kind=dbl_kind), dimension(ntime_atm), &
          intent(inout) :: &
          Tair    , & ! air temperature  (K)
          fsw     , & ! incoming shortwave radiation (W/m^2)
@@ -658,7 +755,7 @@
          precip_factor = c1    ! mm/sec = kg/m^2 s
       endif
 
-      do nt = 1, ntime
+      do nt = 1, ntime_atm
 
       !-----------------------------------------------------------------
       ! make sure interpolated values are physically realistic
@@ -666,6 +763,7 @@
          cldf (nt) = max(min(cldf(nt),c1),c0)
          fsw  (nt) = max(fsw(nt),c0)
          fsnow(nt) = max(fsnow(nt),c0)
+         frain(nt) = max(frain(nt),c0)
          rhoa (nt) = max(rhoa(nt),c0)
          Qa   (nt) = max(Qa(nt),c0)
 
@@ -700,8 +798,9 @@
       !-----------------------------------------------------------------
       ! Compute other fields needed by model
       !-----------------------------------------------------------------
-
-         zlvl(nt) = zlvl0
+         if (trim(atm_data_type) /= 'CAM6') then
+           zlvl(nt) = zlvl0
+         endif
          potT(nt) = Tair(nt)
 
          ! divide shortwave into spectral bands
@@ -712,17 +811,17 @@
                  
          ! precipitation
          fsnow(nt) = fsnow(nt) * precip_factor
-
+         frain(nt) = frain(nt) * precip_factor
          ! determine whether precip is rain or snow
          ! HadGEM forcing provides separate snowfall and rainfall rather 
          ! than total precipitation
-!         if (trim(atm_data_type) /= 'hadgem') then
+         if (trim(atm_data_type) /= 'CAM6') then
             frain(nt) = c0                     
             if (Tair(nt) >= Tffresh) then
                 frain(nt) = fsnow(nt)
                 fsnow(nt) = c0
             endif
-!         endif
+         endif
 
          if (calc_strair) then
             wind (nt) = sqrt(uatm(nt)**2 + vatm(nt)**2)
@@ -1056,7 +1155,6 @@
       read(nu_forcing,*) qdp
 
       close(nu_forcing)
-
       do i = 1, 12 ! monthly
          sst_data (i) = t   (i)
          sss_data (i) = s   (i)
@@ -1064,8 +1162,8 @@
          uocn_data(i) = u   (i)
          vocn_data(i) = v   (i)
          qdp_data (i) = qdp (i)
+         !print*,sst_data(i),sss_data(i),hmix_data(i),uocn_data(i),vocn_data(i),qdp_data(i)
       end do
-
     end subroutine ocn_ISPOL
 
 !=======================================================================
@@ -1118,7 +1216,7 @@
       open (nu_open_clos, file=filename, form='formatted')
 
       ! hourly data
-      do i=1,ntime
+      do i=1,ntime_ocn
          read(nu_open_clos,*) xtime, open_data(i), clos_data(i)
       enddo
 
