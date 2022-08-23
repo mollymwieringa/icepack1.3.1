@@ -26,7 +26,7 @@
          nu_open_clos = 15, &        ! unit for SHEBA forcing file
          nu_diag    = ice_stdout, &  ! unit for diagnostic output
          nu_diag_out = 103
-
+         
       !-----------------------------------------------------------------
       ! numerical constants
       !-----------------------------------------------------------------

@@ -56,7 +56,7 @@
                   + TRZS  *TRBRI* nblyr    & ! zsalinity  (off if TRBRI=0)
                   + n_bgc*TRBGCZ*TRBRI*(nblyr+3) & ! zbgc (off if TRBRI=0) 
                   + n_bgc*TRBGCZ           & ! mobile/stationary phase tracer 
-                  + 1             ! for unused tracer flags
+                  + 15             ! for unused tracer flags
 
 !=======================================================================
 

@@ -168,8 +168,8 @@
       use icedrv_init, only: ice_ic
       use icedrv_init, only: tmask
       use icedrv_init_column, only: init_hbrine, init_bgc
-      use icedrv_restart, only: restartfile
-      use icedrv_restart_shared, only: restart
+      use icedrv_restart, only: restartfile,restartfile_netcdf
+      use icedrv_restart_shared, only: restart, runtype_startup,restart_type
       use icedrv_restart_bgc, only: read_restart_bgc
       use icedrv_state ! almost everything
 
@@ -204,8 +204,16 @@
       endif
 
       if (restart) then
-         call restartfile (ice_ic)
-         call calendar (time)
+         if (restart_type=='bin') then
+           call restartfile (ice_ic)
+         else if (restart_type=='net') then
+           call restartfile_netcdf(ice_ic)
+         endif
+         if (runtype_startup) then
+             print*,'Startup type simulation'
+         else
+           call calendar (time)
+         endif
       endif
 
       if (solve_zsal .or. skl_bgc .or. z_tracers) then

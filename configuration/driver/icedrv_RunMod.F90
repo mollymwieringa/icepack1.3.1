@@ -102,8 +102,9 @@
       use icedrv_flux, only: init_history_therm, init_history_bgc, &
           daidtt, daidtd, dvidtt, dvidtd, dagedtt, dagedtd, init_history_dyn
       use icedrv_history, only: history_cdf, history_write
-      use icedrv_restart, only: dumpfile, final_restart
+      use icedrv_restart, only: dumpfile, final_restart,dumpfile_netcdf
       use icedrv_restart_bgc, only: write_restart_bgc
+      use icedrv_restart_shared, only : restart_type
       use icedrv_step, only: prep_radiation, step_therm1, step_therm2, &
           update_state, step_dyn_ridge, step_snow, step_radiation, &
           biogeochemistry, step_dyn_wave
@@ -230,10 +231,15 @@
       endif
       
       if (write_restart == 1) then
-         call dumpfile     ! core variables for restarting
-         if (solve_zsal .or. skl_bgc .or. z_tracers) &
-            call write_restart_bgc         ! biogeochemistry
-         call final_restart
+         if (restart_type == 'bin') then
+           call dumpfile     ! core variables for restarting
+           if (solve_zsal .or. skl_bgc .or. z_tracers) &
+             call write_restart_bgc         ! biogeochemistry
+           call final_restart
+         else if (restart_type == 'net') then
+         !!!
+           call dumpfile_netcdf
+         endif
       endif
       
     end subroutine ice_step

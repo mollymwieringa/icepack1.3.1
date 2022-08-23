@@ -8,12 +8,12 @@
       public :: lenstr
 
       logical (kind=log_kind), public :: &
-         restart          ! if true, initialize using restart file instead of defaults
-
+         restart, &         ! if true, initialize using restart file instead of defaults
+         runtype_startup
       character (len=char_len_long), public :: &
          restart_file  , & ! output file for restart dump
-         restart_dir       ! directory name for restart dump
-
+         restart_dir, &       ! directory name for restart dump
+         restart_type
 !=======================================================================
 
       contains
