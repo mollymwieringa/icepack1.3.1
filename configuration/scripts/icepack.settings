@@ -1,20 +1,20 @@
 #!/bin/csh -f
 
-setenv ICE_CASENAME   undefined
-setenv ICE_SANDBOX    undefined
-setenv ICE_MACHINE    undefined
-setenv ICE_ENVNAME    undefined
-setenv ICE_MACHCOMP   undefined
-setenv ICE_SCRIPTS    undefined
-setenv ICE_CASEDIR    undefined
-setenv ICE_RUNDIR     /glade/scratch/tcraig/ICEPACK_RUNS/${ICE_CASENAME}
+setenv ICE_CASENAME   test_setup
+setenv ICE_SANDBOX    /glade/work/mollyw/Icepack_DART/Icepack
+setenv ICE_MACHINE    cheyenne
+setenv ICE_ENVNAME    intel
+setenv ICE_MACHCOMP   cheyenne_intel
+setenv ICE_SCRIPTS    /glade/work/mollyw/Icepack_DART/Icepack/configuration/scripts
+setenv ICE_CASEDIR    /glade/work/mollyw/Icepack_DART/Icepack/${ICE_CASENAME}
+setenv ICE_RUNDIR     /glade/scratch/mollyw/ICEPACK_RUNS/${ICE_CASENAME}
 setenv ICE_OBJDIR     ${ICE_RUNDIR}/compile
 setenv ICE_RSTDIR     ${ICE_RUNDIR}/restart
 setenv ICE_HSTDIR     ${ICE_RUNDIR}/history
 setenv ICE_LOGDIR     ${ICE_CASEDIR}/logs
 setenv ICE_RSTPFILE   undefined
 setenv ICE_DRVOPT     icepack
-setenv ICE_IOTYPE     none    # set to none if netcdf library is unavailable
+setenv ICE_IOTYPE     netcdf    # set to none if netcdf library is unavailable
 setenv ICE_CLEANBUILD true
 setenv ICE_CPPDEFS    ""
 setenv ICE_QUIETMODE  false
@@ -30,8 +30,8 @@ setenv ICE_BASECOM    undefined
 setenv ICE_BFBCOMP    undefined
 setenv ICE_SPVAL      undefined
 setenv ICE_RUNLENGTH  00:10:00
-setenv ICE_ACCOUNT    undefined
-setenv ICE_QUEUE      undefined
+setenv ICE_ACCOUNT    P93300065
+setenv ICE_QUEUE      share
 
 #======================================================
 
@@ -39,8 +39,8 @@ setenv ICE_THREADED   false
 if (${ICE_NTHRDS} > 1) setenv ICE_THREADED  true
 
 ### Layers and Categories
-setenv NICELYR   7         # number of vertical layers in the ice
-setenv NSNWLYR   1         # number of vertical layers in the snow
+setenv NICELYR   8         # number of vertical layers in the ice
+setenv NSNWLYR   3        # number of vertical layers in the snow
 setenv NICECAT   5         # number of ice thickness categories
 setenv NFSDCAT   1         # number of floe size categories
 
@@ -50,10 +50,10 @@ setenv TRFY      1         # set to 1 for first-year ice area tracer
 setenv TRLVL     1         # set to 1 for level and deformed ice tracers
 setenv TRPND     1         # set to 1 for melt pond tracers
 setenv TRSNOW    0         # set to 1 for snow metamorphism tracers
-setenv NTRAERO   1         # number of aerosol tracers 
+setenv NTRAERO   3         # number of aerosol tracers 
                            # (up to max_aero in ice_domain_size.F90) 
                            # CESM uses 3 aerosol tracers
-setenv NTRISO    0         # number of isotopes (up to max_iso)
+setenv NTRISO    1         # number of isotopes (up to max_iso)
 setenv TRBRI     0         # set to 1 for brine height tracer
 setenv TRZS      0         # set to 1 for zsalinity tracer
                            # (needs TRBRI = 1)
