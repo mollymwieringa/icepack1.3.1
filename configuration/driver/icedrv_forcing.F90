@@ -198,7 +198,8 @@
       if (trim(atm_data_type(1:5)) == 'ISPOL') call atm_ISPOL
       if (trim(atm_data_type(1:4)) == 'NICE')  call atm_NICE
       if (trim(atm_data_type(1:4)) == 'CAM6')  call atm_CAM6
-      if (trim(ocn_data_type(1:5)) == 'SHEBA') call ice_open_clos
+      ! if (trim(ocn_data_type(1:5)) == 'SHEBA') call ice_open_clos
+      call ice_open_clos
 
       if (restore_ocn) then
         if (trestore == 0) then
@@ -488,7 +489,7 @@
       call finish_ocn_forcing(sst_temp)
       
       ! Lindsay SHEBA open/close dataset is hourly
-      if (trim(ocn_data_type) == 'SHEBA') then
+      if (trim(ocn_data_type) == 'SHEBA' .or. trim(ocn_data_type) == 'ISPOL') then
 
         sec1hr = secday/c24                      ! seconds in 1 hour
         maxrec = ntime_ocn

@@ -826,7 +826,8 @@
                          araftn=araftn(i,:),       vraftn=vraftn(i,:),       &
                          aice=aice(i),             fsalt=fsalt(i),           &
                          first_ice=first_ice(i,:), fzsal=fzsal(i),           &
-                         flux_bio=flux_bio(i,1:nbtrcr))
+                         flux_bio=flux_bio(i,1:nbtrcr),                      &
+                         closing = closing(i) )
 
          endif ! tmask
 
