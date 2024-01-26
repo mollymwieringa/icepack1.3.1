@@ -2,12 +2,12 @@
 
 setenv ICE_CASENAME   test_setup
 setenv ICE_SANDBOX    /glade/work/mollyw/Icepack_DART/Icepack
-setenv ICE_MACHINE    cheyenne
+setenv ICE_MACHINE    derecho
 setenv ICE_ENVNAME    intel
-setenv ICE_MACHCOMP   cheyenne_intel
+setenv ICE_MACHCOMP   derecho_intel
 setenv ICE_SCRIPTS    /glade/work/mollyw/Icepack_DART/Icepack/configuration/scripts
 setenv ICE_CASEDIR    /glade/work/mollyw/Icepack_DART/Icepack/${ICE_CASENAME}
-setenv ICE_RUNDIR     /glade/scratch/mollyw/ICEPACK_RUNS/${ICE_CASENAME}
+setenv ICE_RUNDIR     /glade/derecho/scratch/mollyw/ICEPACK_RUNS/${ICE_CASENAME}
 setenv ICE_OBJDIR     ${ICE_RUNDIR}/compile
 setenv ICE_RSTDIR     ${ICE_RUNDIR}/restart
 setenv ICE_HSTDIR     ${ICE_RUNDIR}/history
