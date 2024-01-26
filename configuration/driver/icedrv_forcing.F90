@@ -33,6 +33,7 @@
          atm_data_type,   & ! 'default', 'clim', 'CFS'
          ocn_data_type,   & ! 'default', 'SHEBA'
          bgc_data_type,   & ! 'default', 'ISPOL', 'NICE'
+         lateral_flux_type,   & ! 'uniform_ice', 'open_water'
          atm_data_file,   & ! atmospheric forcing data file
          ocn_data_file,   & ! ocean forcing data file
          ice_data_file,   & ! ice forcing data file
@@ -198,8 +199,9 @@
       if (trim(atm_data_type(1:5)) == 'ISPOL') call atm_ISPOL
       if (trim(atm_data_type(1:4)) == 'NICE')  call atm_NICE
       if (trim(atm_data_type(1:4)) == 'CAM6')  call atm_CAM6
-      ! if (trim(ocn_data_type(1:5)) == 'SHEBA') call ice_open_clos
-      call ice_open_clos
+      if (trim(ocn_data_type(1:5)) == 'SHEBA' .or. trim(ocn_data_type(1:5)) == 'ISPOL') call ice_open_clos
+
+      ! call ice_open_clos
 
       if (restore_ocn) then
         if (trestore == 0) then
@@ -646,7 +648,7 @@
 
       character (char_len_long) string1
       character (char_len_long) filename
-      character(len=*), parameter :: subname='(atm_CFS)'
+      character(len=*), parameter :: subname='(atm_CAM6)'
 
 !      atm_data_file = 'cfsv2_2015_220_70_01hr.txt'
       filename = trim(data_dir)//'/CAM6/'//trim(atm_data_file)
@@ -1221,6 +1223,8 @@
          read(nu_open_clos,*) xtime, open_data(i), clos_data(i)
       enddo
 
+      close (nu_open_clos)
+      
     end subroutine ice_open_clos
 
 !=======================================================================
