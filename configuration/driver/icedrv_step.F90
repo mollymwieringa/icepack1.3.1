@@ -6,7 +6,7 @@
 
       module icedrv_step
 
-      use icedrv_constants, only: c0, nu_diag, c4
+      use icedrv_constants, only: c0, nu_diag, c4, c1
       use icedrv_kinds
 !      use icedrv_calendar, only: istep1
       use icedrv_forcing, only: ocn_data_type
